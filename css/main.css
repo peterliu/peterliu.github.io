@@ -62,7 +62,7 @@
 }
 pre {
   font-family: Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   tab-size: 4;
   -moz-tab-size: 4;
   -o-tab-size: 4;
@@ -268,7 +268,7 @@ article.md .highlight {
 }
 article.md .highlight figcaption {
   color: var(--text-p2);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   padding: 4px 0.5rem;
   position: sticky;
   left: 0;
@@ -3718,12 +3718,6 @@ article.md.error-page a#back {
   position: relative;
   padding-bottom: calc(1 * var(--gap-l));
 }
-@media screen and (min-width: 1280px) {
-  .l_main {
-    margin-left: calc(2 * var(--gap-l));
-    margin-right: calc(2 * var(--gap-l) + var(--width-left));
-  }
-}
 @media screen and (min-width: 768px) {
   .l_main {
     padding-top: calc(2 * var(--gap-l));
@@ -3759,7 +3753,7 @@ article.md.content {
   flex-direction: column;
 }
 article.md.content.indent >p:not([class]) {
-  text-indent: calc(0.9375rem * 2);
+  text-indent: calc(1.05rem * 2);
   text-align: justify;
 }
 article.md.content.indent h1,
@@ -3891,7 +3885,12 @@ article.md li:not([class]) >a:not([class]):hover {
   text-decoration: underline;
 }
 article.md p {
-  font-size: 0.9375rem;
+  font-family: "Arial", "Times New Roman", "SimSun", system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-size: 1.05rem;
+}
+article.md table {
+  font-family: "Arial", "Times New Roman", "SimSun", system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif;
+  font-size: 1.05rem;
 }
 article.md pre {
   -webkit-font-smoothing: auto;

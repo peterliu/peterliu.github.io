@@ -24,18 +24,18 @@
     <meta name="description" content="提高 C语言 代码的编译速度的方法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="加快编译速度">
-<meta property="og:url" content="http://example.com/2022/07/25/SpeedUpCompiling/index.html">
+<meta property="og:url" content="https://peterliu.github.io/2022/07/25/SpeedUpCompiling/index.html">
 <meta property="og:site_name" content="我的博客">
 <meta property="og:description" content="提高 C语言 代码的编译速度的方法">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/cover-image/SpeedUpCompiling.jpg">
+<meta property="og:image" content="https://peterliu.github.io/cover-image/SpeedUpCompiling.jpg">
 <meta property="article:published_time" content="2022-07-25T11:27:17.000Z">
-<meta property="article:modified_time" content="2022-07-27T01:05:50.582Z">
+<meta property="article:modified_time" content="2022-08-02T07:25:09.483Z">
 <meta property="article:author" content="刘鹏飞">
 <meta property="article:tag" content="GCC">
 <meta property="article:tag" content="ccache">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/cover-image/SpeedUpCompiling.jpg">
+<meta name="twitter:image" content="https://peterliu.github.io/cover-image/SpeedUpCompiling.jpg">
   
   
 
@@ -51,7 +51,7 @@
   
 
   
-</head>
+<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head>
 
 <body>
   
@@ -89,21 +89,19 @@
 <h1 class="article-title"><span>加快编译速度</span></h1>
 <p>提高 C语言 代码的编译速度的方法</p>
 <span id="more"></span>
-
-<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/cover-image/SpeedUpCompiling.jpg"></p>
-<h2 id="多核编译"><a href="#多核编译" class="headerlink" title="多核编译"></a>多核编译</h2><p>以 <code>gcc</code> 为例，编译器只会使用一个进程去做编译，编译控制脚本 <code>makefile</code> 会在编译器编译了一个源文件后，顺序的控制编译器编译下一个源文件。</p>
+<p><img class="lazy" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=" data-src="/cover-image/SpeedUpCompiling.jpg" alt=""></p>
+<h2 id="多核编译">多核编译</h2>
+<p>以 <code>gcc</code> 为例，编译器只会使用一个进程去做编译，编译控制脚本 <code>makefile</code> 会在编译器编译了一个源文件后，顺序的控制编译器编译下一个源文件。</p>
 <p>大多数情况下，在编译阶段（<code>-c</code> 选项，只编译，不连接），众多的源代码编译顺序是不关联的，现在的计算机大多是双核、4核的，甚至8核，完全可以利用CPU的众多核心实现并行编译。使用 <code>make</code> 程序的 <code>-j</code> 参数可以指定同时编译的进程数量，后面一定要指定一个数字，否则 <code>make</code> 会同时开启最大的进程数量，导致太多的进程调度，反而影响效率。</p>
 <p>实验情况:</p>
 <ul>
-<li>CPU : i5 4590 4C&#x2F;4T 3.3G</li>
-<li>编译工具 : <code>Cygwin</code> &#x2F; <code>sde-gcc</code></li>
+<li>CPU : i5 4590 4C/4T 3.3G</li>
+<li>编译工具 : <code>Cygwin</code> / <code>sde-gcc</code></li>
 </ul>
 <p>将编译指令写成一条命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat mm</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line">make clean</span><br><span class="line">make -j8</span><br></pre></td></tr></table></figure>
-
 <p>使用 <code>time</code> 命令统计运行时间</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># time ./mm</span></span><br></pre></td></tr></table></figure>
-
 <p>以下是在不同进程数量情况下的编译时间，可以看出并行的进程数量在CPU核心的1～2倍时，能达到最高的效率，再多也无用，反而增加了进程调度的次数。</p>
 <table>
 <thead>
@@ -114,7 +112,8 @@
 <th>3#</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>单进程</td>
 <td>16.714</td>
 <td>16.269</td>
@@ -144,38 +143,41 @@
 <td>6.355</td>
 <td>6.375</td>
 </tr>
-</tbody></table>
-<h2 id="ccache"><a href="#ccache" class="headerlink" title="ccache"></a>ccache</h2><p><code>ccache</code> 是 complier cache 的缩写。他的原理是缓存编译器使用的中间文件，以达到提高速度的效果。他适用于支持预编译的编译器</p>
+</tbody>
+</table>
+<h2 id="ccache">ccache</h2>
+<p><code>ccache</code> 是 complier cache 的缩写。他的原理是缓存编译器使用的中间文件，以达到提高速度的效果。他适用于支持预编译的编译器</p>
 <p>编译器的工作流程：</p>
 <ul>
-<li><p>预编译</p>
-<p>  <code>-E</code> 参数，预编译阶段主要是将 <code>#include</code> 引用的文件载入到实际代码中，将 <code>#define</code> 宏定义展开</p>
+<li>
+<p>预编译</p>
+<p><code>-E</code> 参数，预编译阶段主要是将 <code>#include</code> 引用的文件载入到实际代码中，将 <code>#define</code> 宏定义展开</p>
 </li>
-<li><p>编译、优化</p>
-<p>  <code>-c</code> <code>-o</code> 参数，将源文件编译成目标文件，并进行优化</p>
+<li>
+<p>编译、优化</p>
+<p><code>-c</code> <code>-o</code> 参数，将源文件编译成目标文件，并进行优化</p>
 </li>
-<li><p>链接</p>
-<p>  将众多目标文件、库文件整合在一起，修正符号地址，形成一个可执行程序</p>
+<li>
+<p>链接</p>
+<p>将众多目标文件、库文件整合在一起，修正符号地址，形成一个可执行程序</p>
 </li>
 </ul>
 <p>通常，我们在编译代码的时候都是将预编译、编译阶段一起进行了，编译器帮助我们完成了很多的事情，我们的代码会引用很多的头文件，包括SDK的头文件，这些头文件自己还会引用非常多的头文件，这样我们一个很短的源文件就会被扩充成一个很长很长的代码，我们来看一下例子：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sde-gcc -E -o xxx.pre.c xxx.c</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># cat xxx.c | wc -l</span></span><br><span class="line">49</span><br><span class="line"></span><br><span class="line"><span class="comment"># cat xxx.pre.c | wc -l</span></span><br><span class="line">19931</span><br></pre></td></tr></table></figure>
-
 <p>可以看到，这个不到50行的代码，在预编译之后，变成了接近两万行的代码。对于源文件数量、头文件数量很多的代码，这是非常花费时间的。 <code>ccache</code> 就是帮助我们将编译过程拆分，暂存了预编译的一些信息，在不需要重新做预编译的情况下，直接使用缓存中的数据，以减少预编译的行为，达到提高速度的效果。</p>
 <p>那么我们使用 <code>ccache</code> 来试试，可以选择去下载源码安装，在 <code>Cygwin</code> 中找到已经有制作好的 <code>ccache</code> 安装包，直接安装就好了，接下来，需要设置一下。</p>
-<p><code>ccache</code> 的使用非常简单，将原本的编译命令行传递给 <code>ccache</code> 即可，比如这样：<br><code>ccache gcc -c xxx</code></p>
+<p><code>ccache</code> 的使用非常简单，将原本的编译命令行传递给 <code>ccache</code> 即可，比如这样：<br>
+<code>ccache gcc -c xxx</code></p>
 <p>我们有几种方式来使用 <code>ccache</code></p>
 <ul>
 <li>修改 <code>makefile</code> ，修改编译工具名称，比如 <code>CC = ccache sde-gcc</code></li>
 <li>不修改代码、脚本，将编译工具指向 <code>ccache</code></li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ~/bin</span><br><span class="line"><span class="built_in">cd</span> ~/bin</span><br><span class="line"><span class="built_in">ln</span> -s /usr/bin/ccache sde-gcc</span><br></pre></td></tr></table></figure>
-
 <p>然后将 <code>~/bin</code> 这个目录加入到 <code>PATH</code> 变量中，并优先搜索 <code>~/bin</code>，在 <code>~/.bashrc</code>文件末尾加上 <code>PATH=~/bin:$PATH</code> ， 然后重启下 <code>bash</code> , 确保用 which 命令找到的编译工具是我们刚建立的符号链接</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># which sde-gcc</span></span><br><span class="line">/home/root/bin/sde-gcc</span><br></pre></td></tr></table></figure>
-
-
-<p>下面我们使用 <code>ccache</code> 来测试一下编译时间，在更换编译进程数的时候，使用命令<br><code>ccache -Cz</code> 清除缓存数据，以测试实际花费的时间</p>
+<p>下面我们使用 <code>ccache</code> 来测试一下编译时间，在更换编译进程数的时候，使用命令<br>
+<code>ccache -Cz</code> 清除缓存数据，以测试实际花费的时间</p>
 <table>
 <thead>
 <tr>
@@ -185,7 +187,8 @@
 <th>3#</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>单进程</td>
 <td>25.611</td>
 <td>7.065</td>
@@ -197,7 +200,8 @@
 <td>3.876</td>
 <td>3.870</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 <p>可以看出来，第一次编译的时候，由于缓存没有命中，导致 <code>ccache</code> 需要去进行拆分编译过程，缓存信息，造成时间增加，而后每一次的操作，缩减的时间是非常可观的。</p>
 
 
@@ -206,7 +210,7 @@
 
 </article>
 
-<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><div class="line"></div><a id="prev" href="/2022/07/26/hello-world/">Hello World<span class="note">较新</span></a></section></div>
+<div class="related-wrap reveal" id="read-next"><section class="header cap theme"><span>接下来阅读</span></section><section class="body fs14"><div class="line"></div><a id="prev" href="/2022/08/03/MarkdownFormula/">Markdown 数学公式语法整理<span class="note">较新</span></a></section></div>
 
 
 
@@ -231,7 +235,7 @@
 
       
 <footer class="page-footer reveal fs12"><hr><div class="text"><p>本博客所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议，转载请注明出处。</p>
-<p>本站由 <a href="http://example.com/">@刘鹏飞</a> 创建，使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.8.0" title="v1.8.0">Stellar</a> 作为主题。</p>
+<p>本站由 <a href="https://peterliu.github.io/">@刘鹏飞</a> 创建，使用 <a target="_blank" rel="noopener" href="https://github.com/xaoxuu/hexo-theme-stellar/tree/1.8.0" title="v1.8.0">Stellar</a> 作为主题。</p>
 </div></footer>
 
       <div class='float-panel mobile-only blur' style='display:none'>
